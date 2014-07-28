@@ -14,7 +14,6 @@
 		D54F1D2E19805D1B008773FB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D54F1D2D19805D1B008773FB /* main.m */; };
 		D54F1D3219805D1B008773FB /* VSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D54F1D3119805D1B008773FB /* VSAppDelegate.m */; };
 		D54F1D3519805D1B008773FB /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D54F1D3319805D1B008773FB /* Main_iPhone.storyboard */; };
-		D54F1D3819805D1B008773FB /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D54F1D3619805D1B008773FB /* Main_iPad.storyboard */; };
 		D54F1D3B19805D1B008773FB /* VSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D54F1D3A19805D1B008773FB /* VSViewController.m */; };
 		D54F1D3D19805D1B008773FB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D54F1D3C19805D1B008773FB /* Images.xcassets */; };
 		D54F1D4419805D1B008773FB /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D54F1D4319805D1B008773FB /* XCTest.framework */; };
@@ -22,6 +21,7 @@
 		D54F1D4619805D1C008773FB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D54F1D2519805D1B008773FB /* UIKit.framework */; };
 		D54F1D4E19805D1C008773FB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D54F1D4C19805D1C008773FB /* InfoPlist.strings */; };
 		D54F1D5019805D1C008773FB /* DropdownSampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D54F1D4F19805D1C008773FB /* DropdownSampleTests.m */; };
+		D54F1D5E19805D5B008773FB /* VSDropdown.m in Sources */ = {isa = PBXBuildFile; fileRef = D54F1D5D19805D5B008773FB /* VSDropdown.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,7 +46,6 @@
 		D54F1D3019805D1B008773FB /* VSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VSAppDelegate.h; sourceTree = "<group>"; };
 		D54F1D3119805D1B008773FB /* VSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VSAppDelegate.m; sourceTree = "<group>"; };
 		D54F1D3419805D1B008773FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
-		D54F1D3719805D1B008773FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		D54F1D3919805D1B008773FB /* VSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VSViewController.h; sourceTree = "<group>"; };
 		D54F1D3A19805D1B008773FB /* VSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VSViewController.m; sourceTree = "<group>"; };
 		D54F1D3C19805D1B008773FB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -55,6 +54,8 @@
 		D54F1D4B19805D1C008773FB /* DropdownSampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DropdownSampleTests-Info.plist"; sourceTree = "<group>"; };
 		D54F1D4D19805D1C008773FB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D54F1D4F19805D1C008773FB /* DropdownSampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DropdownSampleTests.m; sourceTree = "<group>"; };
+		D54F1D5C19805D5B008773FB /* VSDropdown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VSDropdown.h; sourceTree = "<group>"; };
+		D54F1D5D19805D5B008773FB /* VSDropdown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VSDropdown.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,9 +118,10 @@
 				D54F1D3019805D1B008773FB /* VSAppDelegate.h */,
 				D54F1D3119805D1B008773FB /* VSAppDelegate.m */,
 				D54F1D3319805D1B008773FB /* Main_iPhone.storyboard */,
-				D54F1D3619805D1B008773FB /* Main_iPad.storyboard */,
 				D54F1D3919805D1B008773FB /* VSViewController.h */,
 				D54F1D3A19805D1B008773FB /* VSViewController.m */,
+				D54F1D5C19805D5B008773FB /* VSDropdown.h */,
+				D54F1D5D19805D5B008773FB /* VSDropdown.m */,
 				D54F1D3C19805D1B008773FB /* Images.xcassets */,
 				D54F1D2819805D1B008773FB /* Supporting Files */,
 			);
@@ -232,7 +234,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D54F1D3819805D1B008773FB /* Main_iPad.storyboard in Resources */,
 				D54F1D3D19805D1B008773FB /* Images.xcassets in Resources */,
 				D54F1D3519805D1B008773FB /* Main_iPhone.storyboard in Resources */,
 				D54F1D2C19805D1B008773FB /* InfoPlist.strings in Resources */,
@@ -255,6 +256,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D54F1D3B19805D1B008773FB /* VSViewController.m in Sources */,
+				D54F1D5E19805D5B008773FB /* VSDropdown.m in Sources */,
 				D54F1D2E19805D1B008773FB /* main.m in Sources */,
 				D54F1D3219805D1B008773FB /* VSAppDelegate.m in Sources */,
 			);
@@ -293,14 +295,6 @@
 				D54F1D3419805D1B008773FB /* Base */,
 			);
 			name = Main_iPhone.storyboard;
-			sourceTree = "<group>";
-		};
-		D54F1D3619805D1B008773FB /* Main_iPad.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D54F1D3719805D1B008773FB /* Base */,
-			);
-			name = Main_iPad.storyboard;
 			sourceTree = "<group>";
 		};
 		D54F1D4C19805D1C008773FB /* InfoPlist.strings */ = {
@@ -397,6 +391,7 @@
 				GCC_PREFIX_HEADER = "DropdownSample/DropdownSample-Prefix.pch";
 				INFOPLIST_FILE = "DropdownSample/DropdownSample-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -410,6 +405,7 @@
 				GCC_PREFIX_HEADER = "DropdownSample/DropdownSample-Prefix.pch";
 				INFOPLIST_FILE = "DropdownSample/DropdownSample-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
