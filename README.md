@@ -16,7 +16,22 @@ Usage
     [_dropdown reloadDropdownWithContents:@[@"Hello World",@"Dropdown test",@"Bla Bla bla.."] andSelectedString:_myButton.titleLabel.text];
 
 ```
-Other
+<h3>Other<h3>
+
+<b>adoptParentTheme</b> property can be used when the button has solid background color. When this is YES, the dropdown draws itslef with a gradient color which matches with the button's background color. 
+
+You can tweak the componets of background color using below functions:
+
+```html
+    -(void)setupDropDownForView:(UIView *)view direction:(Dropdown_Direction)direction withBaseColor:(UIColor *)baseColor scale:(float)scale;
+   
+    -(void)setupDropDownForView:(UIView *)view direction:(Dropdown_Direction)direction withTopColor:(UIColor *)topColor bottomColor:(UIColor *)bottomColor scale:(float)scale;
+```
+
+About Sample
+==========
+
+In the sample, there are buttons of different background colors, sizes and fonts. Note that only one VSDropdown instance is used for all the button. Whenever a setupDropDownForView: message is called on VSDropdown instance, it removes itslef from its previous superview, if any, and draws itslef again for the  UIButton passed in the argument.
 
 License
 ==========
