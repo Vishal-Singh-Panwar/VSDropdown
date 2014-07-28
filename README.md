@@ -38,6 +38,7 @@ How it looks?
 ==========
 ![Alt text](/Screenshots/Combined.png?raw=true "Combined") 
 
+Individual screen shots [here] (Screenshots).
 
 
 License
