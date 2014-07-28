@@ -36,10 +36,10 @@ In the sample, there are buttons of different background colors, sizes and fonts
 
 How it looks?
 ==========
-![Alt text](/Screenshots/SC_0.png?raw=true "No dropdown")  
-![Alt text](/Screenshots/SC_1.png?raw=true "Large Fonts")  
+![Alt text](/Screenshots/SC_0.png?raw=true "No dropdown") 
+![Alt text](/Screenshots/SC_1.png?raw=true "Large Fonts") 
 ![Alt text](/Screenshots/SC_2.png?raw=true "Wider")  
-![Alt text](/Screenshots/SC_3.png?raw=true "Direction upwards")  
+![Alt text](/Screenshots/SC_3.png?raw=true "Direction upwards")   
 ![Alt text](/Screenshots/SC_4.png?raw=true "Samller")
 
 
