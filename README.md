@@ -10,7 +10,7 @@ Dropdown for iOS
 Usage
 ==========
 
-```html
+```objective-c
 [_dropdown setupDropDownForView:_myButton];
 
 [_dropdown reloadDropdownWithContents:@[@"Hello World",@"Dropdown test",@"Bla Bla bla.."] andSelectedString:_myButton.titleLabel.text];
@@ -21,7 +21,7 @@ Usage
 
 You can tweak the componets of background color using below functions:
 
-```html
+```objective-c
 -(void)setupDropDownForView:(UIView *)view direction:(Dropdown_Direction)direction withBaseColor:(UIColor *)baseColor scale:(float)scale;
    
 -(void)setupDropDownForView:(UIView *)view direction:(Dropdown_Direction)direction withTopColor:(UIColor *)topColor bottomColor:(UIColor *)bottomColor scale:(float)scale;
