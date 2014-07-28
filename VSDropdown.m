@@ -329,29 +329,29 @@ static const CGFloat kDefaultHeight = 160.0;
     
     
 }
--(void)setupDropDownForView:(UIView *)view
+-(void)setupDropdownForView:(UIView *)view
 {
-    [self setupDropDownForView:view direction:DropdownDirection_Automatic];
+    [self setupDropdownForView:view direction:DropdownDirection_Automatic];
     
 }
 
 
 
--(void)setupDropDownForView:(UIView *)view direction:(Dropdown_Direction)direction
+-(void)setupDropdownForView:(UIView *)view direction:(Dropdown_Direction)direction
 {
     
-    [self setupDropDownForView:view direction:direction withTopColor:nil bottomColor:nil scale:0.2];
+    [self setupDropdownForView:view direction:direction withTopColor:nil bottomColor:nil scale:0.2];
 }
 
 
--(void)setupDropDownForView:(UIView *)view direction:(Dropdown_Direction)direction withBaseColor:(UIColor *)baseColor scale:(float)scale
+-(void)setupDropdownForView:(UIView *)view direction:(Dropdown_Direction)direction withBaseColor:(UIColor *)baseColor scale:(float)scale
 {
-    [self setupDropDownForView:view direction:direction withTopColor:baseColor bottomColor:nil scale:scale];
+    [self setupDropdownForView:view direction:direction withTopColor:baseColor bottomColor:nil scale:scale];
     
 }
 
 
--(void)setupDropDownForView:(UIView *)view direction:(Dropdown_Direction)direction withTopColor:(UIColor *)topColor bottomColor:(UIColor *)bottomColor scale:(float)scale
+-(void)setupDropdownForView:(UIView *)view direction:(Dropdown_Direction)direction withTopColor:(UIColor *)topColor bottomColor:(UIColor *)bottomColor scale:(float)scale
 {
     [self remove];
     [self setDirection:direction];
