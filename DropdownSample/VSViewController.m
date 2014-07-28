@@ -42,7 +42,7 @@
 
 -(void)showDropDownForButton:(UIButton *)sender adContents:(NSArray *)contents
 {
-    [_dropdown setupDropDownForView:sender];
+    [_dropdown setupDropdownForView:sender];
     
     [_dropdown reloadDropdownWithContents:contents andSelectedString:sender.titleLabel.text];
     

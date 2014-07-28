@@ -119,47 +119,18 @@ typedef NS_ENUM(NSUInteger, Dropdown_Direction)
 /** Determines whether dropdown should adopt parent color theme. */
 @property(nonatomic,assign)BOOL adoptParentTheme;
 
-
+/** Determines whether dropdown should display items in sorted form. */
 @property(nonatomic,assign)BOOL shouldSortItems;
 
 
-/** Deleate to recive events from dropdown */
+/** Delegate to recive events from dropdown */
 @property(nonatomic,weak)id<VSDropdownDelegate>delegate;
 
-
+/** Dropdown height. Default is 160.0*/
 @property(nonatomic,assign)CGFloat dropdownHeight;
 
-
+/** Dropdown backGround imageview.*/
 @property(nonatomic,readonly)UIImageView *backGroundImageView;
-
-
-
-/** Initializes and returns a newly allocated Dropdown object with the specified delegate, selectedStr and content. Content is used as datasource for the dropdown tableView.
- 
- @note content array should only conatin NSString objects.
- @param dele Delegate for the dropdown.
- @param str String which you want to show as selected.
- @param content Array containing NSString objects which will be shown in dropdown table.
- @param disabled Array containing NSString objects which will be shown as disabled in dropdown table.
- 
- @return An initialized instance of a  VSDropdown class or nil if an error occurred in the attempt to initialize the object.
- */
--(id)initWithDelegate:(id<VSDropdownDelegate>)dele selectedStr:(NSString *)str andContent:(NSArray *)content andDisabledContent:(NSArray *)disabled;
-
-
-/** Initializes and returns a newly allocated Dropdown object with the specified delegate, selectedStr and content. Content is used as datasource for the dropdown tableView.
- 
- @note content array should only conatin NSString objects.
- @param dele Delegate for the dropdown.
- @param str String which you want to show as selected.
- @param content Array containing NSString objects which will be shown in dropdown table.
- @param keyPath A key path of the form relationship.property (with one or more relationships)
- 
- @note It is assumed that all the objects in passed content respond to passed keyPath
- 
- @return An initialized instance of a  VSDropdown class or nil if an error occurred in the attempt to initialize the object.
- */
--(id)initWithDelegate:(id<VSDropdownDelegate>)dele selectedStr:(NSString *)str contents:(NSArray *)content forKeyPath:(NSString *)keyPath;
 
 
 /** Initializes and returns a newly allocated Dropdown object with the specified delegate, selectedStr and content. Content is used as datasource for the dropdown tableView.
@@ -175,7 +146,7 @@ typedef NS_ENUM(NSUInteger, Dropdown_Direction)
  
  @param view UIView below/over which dropdown is required.
  */
--(void)setupDropDownForView:(UIView *)view;
+-(void)setupDropdownForView:(UIView *)view;
 
 
 
@@ -184,7 +155,7 @@ typedef NS_ENUM(NSUInteger, Dropdown_Direction)
  @param view UIView below/over which dropdown is required.
  @param direction direction in which dropdowm is required.
  */
--(void)setupDropDownForView:(UIView *)view direction:(Dropdown_Direction)direction;
+-(void)setupDropdownForView:(UIView *)view direction:(Dropdown_Direction)direction;
 
 
 
@@ -196,7 +167,7 @@ typedef NS_ENUM(NSUInteger, Dropdown_Direction)
  @param scale gradient scale (from -1 to 1).
  
  */
--(void)setupDropDownForView:(UIView *)view direction:(Dropdown_Direction)direction withBaseColor:(UIColor *)baseColor scale:(float)scale;
+-(void)setupDropdownForView:(UIView *)view direction:(Dropdown_Direction)direction withBaseColor:(UIColor *)baseColor scale:(float)scale;
 
 
 
@@ -212,7 +183,7 @@ typedef NS_ENUM(NSUInteger, Dropdown_Direction)
  @note scale will be ignored if both topColor and bottomColor are not nil. bottomColor value will be ignored if topColor is nil. If adoptParentTheme is set to YES then all the color component values passed will be ignored.
  
  */
--(void)setupDropDownForView:(UIView *)view direction:(Dropdown_Direction)direction withTopColor:(UIColor *)topColor bottomColor:(UIColor *)bottomColor scale:(float)scale;
+-(void)setupDropdownForView:(UIView *)view direction:(Dropdown_Direction)direction withTopColor:(UIColor *)topColor bottomColor:(UIColor *)bottomColor scale:(float)scale;
 
 
 /** Removes the receiver from the screen.
