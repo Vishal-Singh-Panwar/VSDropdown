@@ -32,6 +32,8 @@ About Sample
 
 In the sample, there are buttons of different background colors, sizes and fonts. Note that only one `VSDropdown` instance is used for all the button. Whenever a `setupDropDownForView:` message is called on `VSDropdown` instance, it removes itslef from its previous superview, if any, and draws itslef again for the  UIButton passed in the argument.
 
+UPDATE : Animation type has been added and in the sample project, dropdwon takes random values from available `DropdownAnimation` types.
+
 
 How it looks?
 ==========
