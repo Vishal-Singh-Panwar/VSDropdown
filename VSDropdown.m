@@ -11,6 +11,8 @@
 
 static NSString *dropDownCellIdentifier = @"dropDownCellIdentifier";
 static const CGFloat kDefaultHeight = 160.0;
+static const NSTimeInterval kDefaultDuration = 0.35;
+
 
 @interface VSDropdown ()<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate>
 {
@@ -43,7 +45,7 @@ static const CGFloat kDefaultHeight = 160.0;
     if (self) {
         // Initialization code
         [self setBackgroundColor:[UIColor clearColor]];
-        [self.tableView addObserver:self forKeyPath:@"ContentSize" options:NSKeyValueObservingOptionNew context:@"Contentsize"];
+        
         
     }
     return self;
@@ -53,13 +55,9 @@ static const CGFloat kDefaultHeight = 160.0;
 -(void)awakeFromNib
 {
     [self setBackgroundColor:[UIColor clearColor]];
-    [self.tableView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:@"Contentsize"];
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    [self assignDropdownDirectionAndFrame];
-}
+
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -240,31 +238,22 @@ static const CGFloat kDefaultHeight = 160.0;
 
 -(id)initWithDelegate:(id<VSDropdownDelegate>)delegate
 {
-    
-    return  [self initWithDelegate:delegate selectedStr:nil andContent:nil andDisabledContent:nil];
-    
-    
-}
--(id)initWithDelegate:(id<VSDropdownDelegate>)dele selectedStr:(NSString *)str andContent:(NSArray *)content andDisabledContent:(NSArray *)disabled
-{
     self = [super init];
     if (self)
     {
-        _delegate = dele;
-        _seletecdStr = str;
-        _dataArr = content;
-        _disabledArray = [NSMutableArray arrayWithArray:disabled];
+        _delegate = delegate;
         [self setUpViews];
-        [self addObservers];
         [self updateSortedArray];
         
     }
     return self;
+    
+    
 }
+
 
 -(void)setUpViews
 {
-    [self setAlpha:0];
     if (self.backGroundImageView == nil)
     {
         self.backGroundImageView = [[UIImageView alloc]initWithFrame:self.bounds];
@@ -280,28 +269,6 @@ static const CGFloat kDefaultHeight = 160.0;
     [self.tableView setDelegate:self];
     [self.tableView setDataSource:self];
     [self addSubview:self.tableView];
-    
-}
-
-
--(void)addObservers
-{
-    [self.tableView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:@"Contentsize"];
-    
-}
-
--(id)initWithDelegate:(id<VSDropdownDelegate>)dele selectedStr:(NSString *)str contents:(NSArray *)content forKeyPath:(NSString *)keyPath
-{
-    NSArray *contents = nil;
-    if (content && [content count]>0)
-    {
-        if ([content[0] respondsToSelector:NSSelectorFromString(keyPath)])
-        {
-            contents = [content valueForKeyPath:keyPath];
-        }
-        
-    }
-    return [self initWithDelegate:dele selectedStr:str andContent:contents andDisabledContent:nil];
     
 }
 
@@ -375,10 +342,22 @@ static const CGFloat kDefaultHeight = 160.0;
         [self getColorComponentFromColor:[UIColor colorWithRed:131.0/255.0 green:134.0/255.0 blue:134.0/255.0 alpha:1.0] scale:0.2];
         
     }
-    
+
     [self performSetup];
-    [self assignDropdownDirectionAndFrame];
+   
+    if ([self vs_prepareForAnimation])
+    {
+        [self vs_performAnimation];
+        
+    }
+    else
+    {
+        [self vs_finishPresentingDropdown];
+    
+    }
+    
     [self setNeedsDisplay];
+
 }
 
 
@@ -404,39 +383,86 @@ static const CGFloat kDefaultHeight = 160.0;
     tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTap:)];
     [tap setDelegate:self];
     [[[UIApplication sharedApplication] keyWindow] addGestureRecognizer:tap];
-    [UIView animateWithDuration:0.35 animations:^{
+    [self assignDropdownDirectionAndFrame];
+
+}
+
+
+-(BOOL)vs_prepareForAnimation
+{
+    BOOL animationRequired = YES;
+    [self setAlpha:1];
+    
+    switch (self.drodownAnimation) {
+        case DropdownAnimation_Fade:
+            
+            [self setAlpha:0];
+            break;
+
+        case DropdownAnimation_Scale:
+            
+            [self setTransform:CGAffineTransformScale(CGAffineTransformIdentity, 1, 0.1)];
+            break;
+        case DropdownAnimation_None:
+            
+            animationRequired = NO;
+            break;
+        default:
+            break;
+    }
+    
+    return animationRequired;
+}
+
+
+-(void)vs_performAnimation
+{
+    [UIView animateWithDuration:[self animationDuration] animations:^{
         [self setAlpha:1];
+        [self setTransform:CGAffineTransformIdentity];
         
     } completion:^(BOOL finished){
         if (finished)
         {
-            if (self.delegate && [self.delegate respondsToSelector:@selector(dropdownDidAppear:)])
-            {
-                
-                [self.delegate dropdownDidAppear:self];
-                
-            }
             
-            if (self.seletecdStr)
-            {
-                if ([self.sortedArr containsObject:self.seletecdStr])
-                {
-                    NSUInteger index = [self.sortedArr indexOfObject:self.seletecdStr];
-                    if ([self.tableView numberOfRowsInSection:0]>=(index + 1))
-                    {
-                        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.sortedArr indexOfObject:self.seletecdStr] inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-                    }
-                    
-                }
-            }
-            
+            [self vs_finishPresentingDropdown];
             
         }
         
     }];
-    
+
 }
 
+-(void)vs_finishPresentingDropdown
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(dropdownDidAppear:)])
+    {
+        
+        [self.delegate dropdownDidAppear:self];
+        
+    }
+    
+    if (self.seletecdStr)
+    {
+        if ([self.sortedArr containsObject:self.seletecdStr])
+        {
+            NSUInteger index = [self.sortedArr indexOfObject:self.seletecdStr];
+            if ([self.tableView numberOfRowsInSection:0]>=(index + 1))
+            {
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.sortedArr indexOfObject:self.seletecdStr] inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+            }
+            
+        }
+    }
+
+}
+
+
+-(NSTimeInterval)animationDuration
+{
+    return kDefaultDuration;
+
+}
 
 -(UIView *)getParentViewForView:(UIView *)childView
 {
@@ -451,12 +477,7 @@ static const CGFloat kDefaultHeight = 160.0;
 -(void)assignDropdownDirectionAndFrame
 {
     CGFloat height = self.dropdownHeight == 0 ? kDefaultHeight:self.dropdownHeight;
-    if (self.tableView.contentSize.height<height + 15.0)
-    {
-        height = self.tableView.contentSize.height + 15.0;
-    }
-    
-    CGRect frame;
+    CGRect frame = CGRectZero;
     if (self.direction == DropdownDirection_Down)
     {
         [self setAssignedDirection:DropdownDirection_Down];
@@ -491,11 +512,42 @@ static const CGFloat kDefaultHeight = 160.0;
         }
         
     }
+    
     frame = [self.superview convertRect:frame fromView:[self.dropDownView superview]];
     
     [self setFrame:frame];
-    [self setNeedsDisplay];
     
+}
+- (void)setAssignedDirection:(Dropdown_Direction)assignedDirection
+{
+    _assignedDirection = assignedDirection;
+    
+    [self vs_configureAnchorPoint];
+
+}
+
+-(void)vs_configureAnchorPoint
+{
+    if (self.drodownAnimation == DropdownAnimation_Scale)
+    {
+        if (self.assignedDirection == DropdownDirection_Down)
+        {
+            [self.layer setAnchorPoint:CGPointMake(0, 0)];
+            
+        }
+        else if (self.assignedDirection == DropdownDirection_Up)
+        {
+            
+            [self.layer setAnchorPoint:CGPointMake(1, 1)];
+            
+        }
+    }
+    else
+    {
+    
+        [self.layer setAnchorPoint:CGPointMake(0.5, 0.5)];
+    }
+
 }
 
 
@@ -670,7 +722,6 @@ static const CGFloat kDefaultHeight = 160.0;
             [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
             
         }
-        [self setAlpha:0];
         
         [self removeFromSuperview];
         if (self.delegate && [self.delegate respondsToSelector:@selector(dropdownDidDisappear:)])
@@ -687,7 +738,6 @@ static const CGFloat kDefaultHeight = 160.0;
     [tap setDelegate:nil];
     [self.tableView setDelegate:nil];
     [self.tableView setDataSource:nil];
-    [self.tableView removeObserver:self forKeyPath:@"contentSize"];
     
 }
 

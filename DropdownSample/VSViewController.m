@@ -42,6 +42,8 @@
 
 -(void)showDropDownForButton:(UIButton *)sender adContents:(NSArray *)contents
 {
+    [_dropdown setDrodownAnimation:rand()%2];
+    
     [_dropdown setupDropdownForView:sender];
     
     [_dropdown reloadDropdownWithContents:contents andSelectedString:sender.titleLabel.text];

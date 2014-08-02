@@ -39,6 +39,19 @@ typedef NS_ENUM(NSUInteger, Dropdown_Direction)
     DropdownDirection_Down
 };
 
+/** Enum representing different Dropdown direction*/
+typedef NS_ENUM(NSUInteger, DropdownAnimation)
+{
+    /** Enum representing automatic direction.*/
+    DropdownAnimation_Fade = 0,
+    
+    /** Enum representing up direction.*/
+    DropdownAnimation_Scale,
+    
+    /** Enum representing down direction.*/
+    DropdownAnimation_None
+};
+
 
 @class VSDropdown;
 
@@ -132,6 +145,9 @@ typedef NS_ENUM(NSUInteger, Dropdown_Direction)
 /** Dropdown backGround imageview.*/
 @property(nonatomic,readonly)UIImageView *backGroundImageView;
 
+/** Dropdown backGround imageview.*/
+@property(nonatomic,assign)DropdownAnimation drodownAnimation;
+
 
 /** Initializes and returns a newly allocated Dropdown object with the specified delegate, selectedStr and content. Content is used as datasource for the dropdown tableView.
  
@@ -213,6 +229,7 @@ typedef NS_ENUM(NSUInteger, Dropdown_Direction)
  
  */
 -(void)reloadDropdownWithContents:(NSArray *)contents keyPath:(NSString *)keyPath selectedString:(NSString *)selectedItem;
+
 
 
 @end
