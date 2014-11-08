@@ -14,9 +14,8 @@ static const CGFloat kDefaultHeight = 160.0;
 static const NSTimeInterval kDefaultDuration = 0.35;
 
 
-@interface VSDropdown ()<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate>
+@interface VSDropdown ()<UITableViewDelegate,UITableViewDataSource>
 {
-    UITapGestureRecognizer *tap;
     BOOL topEdgeRounded;
     CGRect viewFrame;
     CGFloat colorComponentsVar[8];
@@ -26,7 +25,7 @@ static const NSTimeInterval kDefaultDuration = 0.35;
 @property(nonatomic,strong)NSArray *dataArr;
 @property(nonatomic,strong)NSMutableArray *sortedArr;
 @property(nonatomic,strong)NSString *seletecdStr;
-@property(nonatomic,strong)UIImageView *backGroundImageView;
+@property(nonatomic,strong)UIImageView *backgroundImageView;
 @property(nonatomic,strong)UIFont *font;
 @property(nonatomic,strong)UIColor *textColor;
 @property(nonatomic,strong)NSMutableArray *disabledArray;
@@ -244,6 +243,7 @@ static const NSTimeInterval kDefaultDuration = 0.35;
         _delegate = delegate;
         [self setUpViews];
         [self updateSortedArray];
+        [self addObservers];
         
     }
     return self;
@@ -251,15 +251,45 @@ static const NSTimeInterval kDefaultDuration = 0.35;
     
 }
 
+-(void)addObservers
+{
+    [self.tableView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:@"TVCOntentSize"];
+
+}
+
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"contentSize"])
+    {
+        if (self.shouldContractForLesserContent)
+        {
+            [self assignDropdownDirectionAndFrame];
+
+        }
+    }
+
+}
+
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
+{
+    BOOL pointInside = [super pointInside:point withEvent:event];
+    
+    if ((pointInside == NO) && (self.autoRemoveDisabled == NO))
+    {
+        [self remove];
+    }
+    return pointInside;
+}
 
 -(void)setUpViews
 {
-    if (self.backGroundImageView == nil)
+    if (self.backgroundImageView == nil)
     {
-        self.backGroundImageView = [[UIImageView alloc]initWithFrame:self.bounds];
-        [self.backGroundImageView setBackgroundColor:[UIColor clearColor]];
-        [self.backGroundImageView setAutoresizingMask:UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth];
-        [self addSubview:self.backGroundImageView];
+        self.backgroundImageView = [[UIImageView alloc]initWithFrame:self.bounds];
+        [self.backgroundImageView setBackgroundColor:[UIColor clearColor]];
+        [self.backgroundImageView setAutoresizingMask:UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth];
+        [self addSubview:self.backgroundImageView];
     }
     [self setBackgroundColor:[UIColor clearColor]];
     self.tableView = [[UITableView alloc]initWithFrame:self.bounds style:UITableViewStylePlain];
@@ -380,9 +410,6 @@ static const NSTimeInterval kDefaultDuration = 0.35;
     }
     UIView *superView = [self getParentViewForView:self.dropDownView];;
     [superView addSubview:self];
-    tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTap:)];
-    [tap setDelegate:self];
-    [[[UIApplication sharedApplication] keyWindow] addGestureRecognizer:tap];
     [self assignDropdownDirectionAndFrame];
 
 }
@@ -476,7 +503,13 @@ static const NSTimeInterval kDefaultDuration = 0.35;
 }
 -(void)assignDropdownDirectionAndFrame
 {
-    CGFloat height = self.dropdownHeight == 0 ? kDefaultHeight:self.dropdownHeight;
+    CGFloat height = self.maxDropdownHeight == 0 ? kDefaultHeight:self.maxDropdownHeight;
+    
+    if (self.shouldContractForLesserContent && self.tableView.contentSize.height + 15.0 < height)
+    {
+        height = self.tableView.contentSize.height + 15.0;
+    }
+    
     CGRect frame = CGRectZero;
     if (self.direction == DropdownDirection_Down)
     {
@@ -495,7 +528,8 @@ static const NSTimeInterval kDefaultDuration = 0.35;
     else
     {
         CGRect referenceFrame = [self.superview convertRect:viewFrame fromView:[self.dropDownView superview]];
-        if (referenceFrame.origin.y+referenceFrame.size.height+self.bounds.size.height < ([UIScreen mainScreen].bounds.size.height))
+        CGFloat startPointOnScreen = referenceFrame.origin.y+referenceFrame.size.height+height;
+        if (startPointOnScreen < ([UIScreen mainScreen].bounds.size.height))
         {
             frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y+viewFrame.size.height-1.0, viewFrame.size.width, height);
             [self setDirection:DropdownDirection_Automatic];
@@ -505,7 +539,7 @@ static const NSTimeInterval kDefaultDuration = 0.35;
         }
         else
         {
-            frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y-self.frame.size.height+1.0, viewFrame.size.width, height);
+            frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y-height, viewFrame.size.width, height);
             [self setDirection:DropdownDirection_Automatic];
             [self setAssignedDirection:DropdownDirection_Up];
             topEdgeRounded = YES;
@@ -708,10 +742,7 @@ static const NSTimeInterval kDefaultDuration = 0.35;
 -(void)remove
 {
     [self.layer removeAllAnimations];
-    if([[[[UIApplication sharedApplication] keyWindow]gestureRecognizers] containsObject:tap])
-    {
-        [[[UIApplication sharedApplication] keyWindow]removeGestureRecognizer:tap];
-    }
+    
     UIView *superview = [self superview];
     if (superview)
     {
@@ -723,11 +754,13 @@ static const NSTimeInterval kDefaultDuration = 0.35;
             
         }
         
-        [self removeFromSuperview];
-        if (self.delegate && [self.delegate respondsToSelector:@selector(dropdownDidDisappear:)])
+        if (self.delegate && [self.delegate respondsToSelector:@selector(dropdownWillDisappear:)])
         {
-            [self.delegate dropdownDidDisappear:self];
+            [self.delegate dropdownWillDisappear:self];
         }
+        
+        [self removeFromSuperview];
+        
     }
     
 }
@@ -735,7 +768,7 @@ static const NSTimeInterval kDefaultDuration = 0.35;
 
 -(void)cleanup
 {
-    [tap setDelegate:nil];
+    [self.tableView removeObserver:self forKeyPath:@"contentSize"];
     [self.tableView setDelegate:nil];
     [self.tableView setDataSource:nil];
     

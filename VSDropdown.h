@@ -79,12 +79,12 @@ typedef NS_ENUM(NSUInteger, DropdownAnimation)
 -(void)dropdownDidAppear:(VSDropdown *)dropDown;
 
 
-/** called on dropdown delegate whenever dropdown is removed from a view using remove method.
+/** called on dropdown delegate whenever dropdown will be removed from a view using remove method.
  
  @param dropDown reference to VSDropdown object.
  
  */
--(void)dropdownDidDisappear:(VSDropdown *)dropDown;
+-(void)dropdownWillDisappear:(VSDropdown *)dropDown;
 
 
 
@@ -140,13 +140,26 @@ typedef NS_ENUM(NSUInteger, DropdownAnimation)
 @property(nonatomic,weak)id<VSDropdownDelegate>delegate;
 
 /** Dropdown height. Default is 160.0*/
-@property(nonatomic,assign)CGFloat dropdownHeight;
+@property(nonatomic,assign)CGFloat maxDropdownHeight;
 
 /** Dropdown backGround imageview.*/
-@property(nonatomic,readonly)UIImageView *backGroundImageView;
+@property(nonatomic,readonly)UIImageView *backgroundImageView;
 
 /** Dropdown backGround imageview.*/
 @property(nonatomic,assign)DropdownAnimation drodownAnimation;
+
+
+/** Specify whether dropdown should remove itslef whenever tapped outside the boudns of dropdown. When set, client will be to remove the dropdown. It is recommended to remove it by calling remove method.
+ 
+ @see remove
+ 
+ */
+@property(nonatomic,assign)BOOL autoRemoveDisabled;
+
+
+/** When set, dropdown will reduce its height irrespective of 'maxDropdownHeight' value when content to show is not large enough to cover the entire height of dropdown.*/
+@property(nonatomic,assign)BOOL shouldContractForLesserContent;
+
 
 
 /** Initializes and returns a newly allocated Dropdown object with the specified delegate, selectedStr and content. Content is used as datasource for the dropdown tableView.
