@@ -36,31 +36,48 @@
 
 - (IBAction)testAction:(id)sender
 {
-    [self showDropDownForButton:sender adContents:@[@"Hello World",@"Dropdown test",@"Aplhabetic Sorting",@"Test Dropdown 1",@"Test Dropdown 2",@"Test Dropdown 3",@"Test Dropdown 4",@"Just a random text to check multi-line capability of dropdown. We will be having self sizing cells in iOS8  :D"]];
+    [self showDropDownForButton:sender adContents:@[@"Hello World",@"Dropdown test",@"Aplhabetic sorting",@"Dropdown Item 1",@"Dropdown Item 2",@"Dropdown Item 3",@"Dropdown Item 4",@"Dropdown Item 5",@"Dropdown Item 6",@"Dropdown Item 7",@"Dropdown Item 8",@"Dropdown Item 9",@"Dropdown Item 10"]];
     
 }
 
 -(void)showDropDownForButton:(UIButton *)sender adContents:(NSArray *)contents
 {
+    [_dropdown setAllowMultipleSelection:YES];
+    
     [_dropdown setDrodownAnimation:rand()%2];
     
     [_dropdown setupDropdownForView:sender];
     
-    [_dropdown reloadDropdownWithContents:contents andSelectedString:sender.titleLabel.text];
+    [_dropdown setSeparatorColor:[UIColor whiteColor]];
+    
+    [_dropdown reloadDropdownWithContents:contents andSelectedItems:[sender.titleLabel.text componentsSeparatedByString:@","]];
     
     
 }
 
 
-- (void)dropdown:(VSDropdown *)dropDown didSelectValue:(NSString *)str atIndex:(NSUInteger)index
+- (void)dropdown:(VSDropdown *)dropDown didChangeSelectionForValue:(NSString *)str atIndex:(NSUInteger)index selected:(BOOL)selected
 {
     if ([dropDown.dropDownView isKindOfClass:[UIButton class]])
     {
         UIButton *btn = (UIButton *)dropDown.dropDownView;
-        [btn setTitle:str forState:UIControlStateNormal];
+        NSString *allSelectedItems = [dropDown.selectedItems componentsJoinedByString:@","];
+        [btn setTitle:allSelectedItems forState:UIControlStateNormal];
         
     }
-    
+
 }
+
+- (UIColor *)outlineColorForDropdown:(VSDropdown *)dropdown
+{
+    return [UIColor whiteColor];
+}
+
+- (CGFloat)outlineWidthForDropdown:(VSDropdown *)dropdown
+{
+    return 2.0;
+}
+
+
 
 @end

@@ -25,18 +25,19 @@
 // THE SOFTWARE.
 
 
+#import <UIKit/UIKit.h>
 
 /** Enum representing different Dropdown direction*/
-typedef NS_ENUM(NSUInteger, Dropdown_Direction)
+typedef NS_ENUM(NSUInteger, VSDropdown_Direction)
 {
     /** Enum representing automatic direction.*/
-    DropdownDirection_Automatic = 0,
+    VSDropdownDirection_Automatic = 0,
     
     /** Enum representing up direction.*/
-    DropdownDirection_Up,
+    VSDropdownDirection_Up,
     
     /** Enum representing down direction.*/
-    DropdownDirection_Down
+    VSDropdownDirection_Down
 };
 
 /** Enum representing different Dropdown direction*/
@@ -60,6 +61,33 @@ typedef NS_ENUM(NSUInteger, DropdownAnimation)
 
 @optional
 
+
+
+/** Asks  dropdown delegate for the corner radius.
+ 
+ @param dropDown reference to VSDropdown object.
+ @return Return corner radius of dropdown.
+ 
+ */
+-(CGFloat)cornerRadiusForDropdown:(VSDropdown *)dropdown;
+
+/** Asks  dropdown delegate for the color of outline.
+ 
+ @param dropDown reference to VSDropdown object.
+ @return Return color of outline.
+ 
+ */
+-(UIColor *)outlineColorForDropdown:(VSDropdown *)dropdown;
+
+
+/** Asks dropdown delegate for the outline width.
+ 
+ @param dropDown reference to VSDropdown object.
+ @return Return width of outline.
+ 
+ */
+-(CGFloat)outlineWidthForDropdown:(VSDropdown *)dropdown;
+
 /** called on dropdown delegate whenever an item is selected from dropdown.
  
  @param dropDown reference to VSDropdown object.
@@ -67,7 +95,39 @@ typedef NS_ENUM(NSUInteger, DropdownAnimation)
  @param index Index of selected item in the content array which was passed as datasource.
  
  */
--(void)dropdown:(VSDropdown *)dropDown didSelectValue:(NSString *)str atIndex:(NSUInteger)index;
+-(void)dropdown:(VSDropdown *)dropDown didSelectValue:(NSString *)str atIndex:(NSUInteger)index __attribute((deprecated("use  dropdown: didChangeSelectionForValue: atIndex: selected:  instead")));
+
+
+
+/** called on dropdown delegate whenever selection is changed for an item.
+ 
+ @param dropDown reference to VSDropdown object.
+ @param str String for which selection is changed.
+ @param index Index of item in the content array for which selection is changed.
+ @param selected Bool value, if YES then item is selected else it is deselected.
+ */
+
+-(void)dropdown:(VSDropdown *)dropDown didChangeSelectionForValue:(NSString *)str atIndex:(NSUInteger)index selected:(BOOL)selected;
+
+
+
+/** called on dropdown delegate whenever frame calculation is completed on dropdown.
+ 
+ @param dropDown reference to VSDropdown object.
+ @param frame Frame which is set. This can be used to provide some offset as per your requirement.
+ 
+ */
+-(void)dropdown:(VSDropdown *)dropDown didSetFrame:(CGRect )frame;
+
+
+/** called on dropdown delegate whenever an item is deselected from dropdown.
+ 
+ @param dropDown reference to VSDropdown object.
+ @param str String which is deselected.
+ @param index Index of selected item in the content array which was passed as datasource.
+ 
+ */
+-(void)dropdown:(VSDropdown *)dropDown didDeselectValue:(NSString *)str atIndex:(NSUInteger)index;
 
 
 /** called on dropdown delegate whenever dropdown is added to a view using showDropDownForView: method
@@ -79,7 +139,7 @@ typedef NS_ENUM(NSUInteger, DropdownAnimation)
 -(void)dropdownDidAppear:(VSDropdown *)dropDown;
 
 
-/** called on dropdown delegate whenever dropdown will be removed from a view using remove method.
+/** called on dropdown delegate whenever dropdown is removed from a view using remove method.
  
  @param dropDown reference to VSDropdown object.
  
@@ -89,14 +149,20 @@ typedef NS_ENUM(NSUInteger, DropdownAnimation)
 
 
 @end
-#import <UIKit/UIKit.h>
 
 /**---------------------------------------------------------------------------------------
- *  Custom Dropdown Menu. Use this class along with a nib file named "VSDropdown".
+ *  Custom Dropdown Menu. In order to have common view for different models, any model can be used by specifying the keypath name of the key whose value needs to be displayed in the dropdown.
  *  ---------------------------------------------------------------------------------------
  */
 
-@interface VSDropdown : UIView
+@interface VSDropdown : UIView<UITableViewDataSource,UITableViewDelegate>
+
+
+@property(nonatomic,assign)UITableViewCellSeparatorStyle separatorType;
+
+@property(nonatomic,strong)UIColor *separatorColor;
+
+@property(nonatomic,strong)UIColor *textColor;
 
 /** Holds reference to tableView used in dropdown. */
 @property (nonatomic,readonly)UITableView *tableView;
@@ -110,30 +176,29 @@ typedef NS_ENUM(NSUInteger, DropdownAnimation)
 /** Alphabetically sorted dataArr. */
 @property(nonatomic,readonly)NSMutableArray *sortedArr;
 
-/** Reference to slected item in dropdown. */
-@property(nonatomic,readonly)NSString *seletecdStr;
+/** Reference to slected items in dropdown. */
+@property(nonatomic,readonly)NSArray *selectedItems;
 
 /** Reference to font used in dropdown*/
 @property(nonatomic,readonly)UIFont *font;
-
-
-/** Reference to text color used in dropdown*/
-@property(nonatomic,readonly)UIColor *textColor;
 
 /** Array containing items which should be disbaled*/
 @property(nonatomic,readonly)NSMutableArray *disabledArray;
 
 /** Direction for dropdown*/
-@property(nonatomic,assign)Dropdown_Direction direction;
+@property(nonatomic,assign)VSDropdown_Direction direction;
 
 /** Assigned direction  for dropdown*/
-@property(nonatomic,readonly)Dropdown_Direction assignedDirection;
+@property(nonatomic,readonly)VSDropdown_Direction assignedDirection;
 
 /** Determines whether dropdown should adopt parent color theme. */
 @property(nonatomic,assign)BOOL adoptParentTheme;
 
 /** Determines whether dropdown should display items in sorted form. */
 @property(nonatomic,assign)BOOL shouldSortItems;
+
+/** Determines whether dropdown should display items in sorted form. */
+@property(nonatomic,assign)BOOL controlRemovalManually;
 
 
 /** Delegate to recive events from dropdown */
@@ -143,23 +208,13 @@ typedef NS_ENUM(NSUInteger, DropdownAnimation)
 @property(nonatomic,assign)CGFloat maxDropdownHeight;
 
 /** Dropdown backGround imageview.*/
-@property(nonatomic,readonly)UIImageView *backgroundImageView;
+@property(nonatomic,readonly)UIImageView *backGroundImageView;
 
 /** Dropdown backGround imageview.*/
 @property(nonatomic,assign)DropdownAnimation drodownAnimation;
 
 
-/** Specify whether dropdown should remove itslef whenever tapped outside the boudns of dropdown. When set, client will be to remove the dropdown. It is recommended to remove it by calling remove method.
- 
- @see remove
- 
- */
-@property(nonatomic,assign)BOOL autoRemoveDisabled;
-
-
-/** When set, dropdown will reduce its height irrespective of 'maxDropdownHeight' value when content to show is not large enough to cover the entire height of dropdown.*/
-@property(nonatomic,assign)BOOL shouldContractForLesserContent;
-
+@property(nonatomic,assign)BOOL allowMultipleSelection;
 
 
 /** Initializes and returns a newly allocated Dropdown object with the specified delegate, selectedStr and content. Content is used as datasource for the dropdown tableView.
@@ -167,7 +222,7 @@ typedef NS_ENUM(NSUInteger, DropdownAnimation)
  @param delegate delegate for the dropdown.
  
  */
--(id)initWithDelegate:(id<VSDropdownDelegate>)delegate;
+-(instancetype)initWithDelegate:(id<VSDropdownDelegate>)delegate;
 
 
 
@@ -184,7 +239,7 @@ typedef NS_ENUM(NSUInteger, DropdownAnimation)
  @param view UIView below/over which dropdown is required.
  @param direction direction in which dropdowm is required.
  */
--(void)setupDropdownForView:(UIView *)view direction:(Dropdown_Direction)direction;
+-(void)setupDropdownForView:(UIView *)view direction:(VSDropdown_Direction)direction;
 
 
 
@@ -196,7 +251,7 @@ typedef NS_ENUM(NSUInteger, DropdownAnimation)
  @param scale gradient scale (from -1 to 1).
  
  */
--(void)setupDropdownForView:(UIView *)view direction:(Dropdown_Direction)direction withBaseColor:(UIColor *)baseColor scale:(float)scale;
+-(void)setupDropdownForView:(UIView *)view direction:(VSDropdown_Direction)direction withBaseColor:(UIColor *)baseColor scale:(float)scale;
 
 
 
@@ -212,7 +267,7 @@ typedef NS_ENUM(NSUInteger, DropdownAnimation)
  @note scale will be ignored if both topColor and bottomColor are not nil. bottomColor value will be ignored if topColor is nil. If adoptParentTheme is set to YES then all the color component values passed will be ignored.
  
  */
--(void)setupDropdownForView:(UIView *)view direction:(Dropdown_Direction)direction withTopColor:(UIColor *)topColor bottomColor:(UIColor *)bottomColor scale:(float)scale;
+-(void)setupDropdownForView:(UIView *)view direction:(VSDropdown_Direction)direction withTopColor:(UIColor *)topColor bottomColor:(UIColor *)bottomColor scale:(float)scale;
 
 
 /** Removes the receiver from the screen.
@@ -232,18 +287,50 @@ typedef NS_ENUM(NSUInteger, DropdownAnimation)
  @param selectedString String which should be selected after reload.
  
  */
--(void)reloadDropdownWithContents:(NSArray *)contents andSelectedString:(NSString *)selectedString;
+-(void)reloadDropdownWithContents:(NSArray *)contents andSelectedItems:(NSArray *)selectedItems;
+
 
 
 /** Use this method to to reload the contents of Dropdown using models
  @param contents Array containing the Model objects whose keyPath values will be displayed in dropDown
  @param keyPath A key path of the form relationship.property (with one or more relationships)
- @param selectedString String which should be selected after reload.
- 
+ @param selectedItems Items which should be selected after reload.
+
  */
--(void)reloadDropdownWithContents:(NSArray *)contents keyPath:(NSString *)keyPath selectedString:(NSString *)selectedItem;
+-(void)reloadDropdownWithContents:(NSArray *)contents keyPath:(NSString *)keyPath selectedItems:(NSArray *)selectedItems;
 
 
+
+-(void)reloadDropdownWithContents:(NSArray *)contents keyPath:(NSString *)keyPath selectedItems:(NSArray *)selectedItems imageKey:(NSString *)imageKey;
+
+
+-(void)reloadDropdownWithContents:(NSArray *)contents imageNames:(NSArray *)imageNames selectedItems:(NSArray *)selectedItems;
+
+
+
+-(void)didPerformSetup;
+
+
+-(CGFloat)cornerRadius;
+
+
+-(CGFloat)outlineWidth;
+
+
+-(UIColor *)outlineColor;
+
+@end
+
+
+
+/**---------------------------------------------------------------------------------------
+ *  Dropdown model.
+ *  ---------------------------------------------------------------------------------------
+ */
+@interface VSDropdownItem : NSObject
+
+@property (nonatomic,strong)NSString *itemValue;
+@property (nonatomic,strong)UIImage *itemImage;
 
 @end
 
