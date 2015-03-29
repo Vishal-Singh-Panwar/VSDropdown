@@ -48,7 +48,7 @@
     
     [_dropdown setupDropdownForView:sender];
     
-    [_dropdown setSeparatorColor:[UIColor whiteColor]];
+    [_dropdown setSeparatorColor:sender.titleLabel.textColor];
     
     [_dropdown reloadDropdownWithContents:contents andSelectedItems:[sender.titleLabel.text componentsSeparatedByString:@","]];
     
@@ -70,6 +70,13 @@
 
 - (UIColor *)outlineColorForDropdown:(VSDropdown *)dropdown
 {
+    if ([dropdown.dropDownView isKindOfClass:[UIButton class]])
+    {
+        UIButton *btn = (UIButton *)dropdown.dropDownView;
+        
+        return btn.titleLabel.textColor;
+
+    }
     return [UIColor whiteColor];
 }
 
