@@ -13,7 +13,7 @@ Usage
 ```objective-c
 [_dropdown setupDropdownForView:_myButton];
 
-[_dropdown reloadDropdownWithContents:@[@"Hello World",@"Dropdown test",@"Bla Bla bla.."] andSelectedString:_myButton.titleLabel.text];
+[_dropdown reloadDropdownWithContents:@[@"Hello World",@"Dropdown test",@"Bla Bla bla.."] andSelectedItems:@[_myButton.titleLabel.text]];
 
 ```
 ##Other
