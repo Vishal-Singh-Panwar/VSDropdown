@@ -36,7 +36,7 @@
 
 - (IBAction)testAction:(id)sender
 {
-    [self showDropDownForButton:sender adContents:@[@"Hello World",@"Dropdown test",@"Aplhabetic sorting",@"Dropdown Item 1",@"Dropdown Item 2",@"Dropdown Item 3",@"Dropdown Item 4",@"Dropdown Item 5",@"Dropdown Item 6",@"Dropdown Item 7",@"Dropdown Item 8",@"Dropdown Item 9",@"Dropdown Item 10"]];
+    [self showDropDownForButton:sender adContents:@[@"Two wrongs don't make a right.",@"No man is an island.",@"Aplhabetic sorting",@"Fortune favors the bold.",@"If it ain't broke, don't fix it.",@"If you can't beat 'em, join 'em.",@"One man's trash is another man's treasure.",@"You can lead a horse to water, but you can't make him drink.",@"Proverbs"]];
     
 }
 
@@ -50,7 +50,7 @@
     
     [_dropdown setSeparatorColor:sender.titleLabel.textColor];
     
-    [_dropdown reloadDropdownWithContents:contents andSelectedItems:[sender.titleLabel.text componentsSeparatedByString:@","]];
+    [_dropdown reloadDropdownWithContents:contents andSelectedItems:[sender.titleLabel.text componentsSeparatedByString:@";"]];
     
     
 }
@@ -61,7 +61,7 @@
     if ([dropDown.dropDownView isKindOfClass:[UIButton class]])
     {
         UIButton *btn = (UIButton *)dropDown.dropDownView;
-        NSString *allSelectedItems = [dropDown.selectedItems componentsJoinedByString:@","];
+        NSString *allSelectedItems = [dropDown.selectedItems componentsJoinedByString:@";"];
         [btn setTitle:allSelectedItems forState:UIControlStateNormal];
         
     }
@@ -85,6 +85,10 @@
     return 2.0;
 }
 
+- (CGFloat)cornerRadiusForDropdown:(VSDropdown *)dropdown
+{
+    return 5.0;
+}
 
 
 @end

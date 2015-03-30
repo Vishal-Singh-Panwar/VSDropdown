@@ -104,12 +104,13 @@ static const NSTimeInterval kDefaultDuration = 0.25;
 
 -(CGFloat)cornerRadius
 {
+
     if (self.delegate && [self.delegate respondsToSelector:@selector(cornerRadiusForDropdown:)])
     {
         return [self.delegate cornerRadiusForDropdown:self];
     }
 
-    return 5.0;
+    return 0.0;
     
 }
 
@@ -120,7 +121,7 @@ static const NSTimeInterval kDefaultDuration = 0.25;
         return [self.delegate outlineWidthForDropdown:self];
     }
     
-    return 0;
+    return 0.0;
 
 }
 
@@ -622,7 +623,20 @@ static const NSTimeInterval kDefaultDuration = 0.25;
         CGRect referenceFrame = [self.superview convertRect:viewFrame fromView:[self.dropDownView superview]];
         
         CGFloat totalHeight = referenceFrame.origin.y+referenceFrame.size.height+self.bounds.size.height;
-        if (totalHeight < ([UIScreen mainScreen].bounds.size.height))
+        
+        UIInterfaceOrientation appOrientation = [UIApplication sharedApplication].statusBarOrientation;
+        
+        CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
+        
+        if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1 == NO)
+        {
+            if (appOrientation == UIInterfaceOrientationLandscapeLeft || appOrientation == UIInterfaceOrientationLandscapeRight)
+            {
+                screenHeight = [UIScreen mainScreen].bounds.size.width;
+            }
+        }
+        
+        if (totalHeight < screenHeight)
         {
             frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y+viewFrame.size.height-1.0, viewFrame.size.width, height);
             [self setDirection:VSDropdownDirection_Automatic];
@@ -836,27 +850,24 @@ static const NSTimeInterval kDefaultDuration = 0.25;
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    VSDropdownItem *ddi = [self.sortedArr objectAtIndex:indexPath.row];
+    if (self.allowMultipleSelection)
+    {
+        VSDropdownItem *ddi = [self.sortedArr objectAtIndex:indexPath.row];
         
-    NSMutableArray *allSelectedItems = [NSMutableArray arrayWithArray:self.selectedItems];
-    
-    [allSelectedItems removeObject:ddi.itemValue];
-    
-    [self setSelectedItems:[NSArray arrayWithArray:allSelectedItems]];
-    
-    [tableView reloadData];
-    
-    if (self.delegate && [self.delegate respondsToSelector:@selector(dropdown:didChangeSelectionForValue:atIndex:selected:)])
-    {
-        [self.delegate dropdown:self didChangeSelectionForValue:ddi.itemValue atIndex:[self.dataArr indexOfObject:ddi] selected:NO];
-    }
-    
-    if (self.allowMultipleSelection == NO)
-    {
-        [self remove];
+        NSMutableArray *allSelectedItems = [NSMutableArray arrayWithArray:self.selectedItems];
+        
+        [allSelectedItems removeObject:ddi.itemValue];
+        
+        [self setSelectedItems:[NSArray arrayWithArray:allSelectedItems]];
+        
+        [tableView reloadData];
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(dropdown:didChangeSelectionForValue:atIndex:selected:)])
+        {
+            [self.delegate dropdown:self didChangeSelectionForValue:ddi.itemValue atIndex:[self.dataArr indexOfObject:ddi] selected:NO];
+        }
         
     }
-
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
