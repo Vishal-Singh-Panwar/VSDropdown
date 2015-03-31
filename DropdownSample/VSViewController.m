@@ -24,8 +24,9 @@
     _dropdown = [[VSDropdown alloc]initWithDelegate:self];
     [_dropdown setAdoptParentTheme:YES];
     [_dropdown setShouldSortItems:YES];
+    [_dropdown setAllowMultipleSelection:YES];
     
-	// Do any additional setup after loading the view, typically from a nib.
+    // Do any additional setup after loading the view, typically from a nib.
 }
 
 - (void)didReceiveMemoryWarning
@@ -42,7 +43,6 @@
 
 -(void)showDropDownForButton:(UIButton *)sender adContents:(NSArray *)contents
 {
-    [_dropdown setAllowMultipleSelection:YES];
     
     [_dropdown setDrodownAnimation:rand()%2];
     
@@ -55,29 +55,22 @@
     
 }
 
-
+#pragma mark -
+#pragma mark - VSDropdown Delegate methods.
 - (void)dropdown:(VSDropdown *)dropDown didChangeSelectionForValue:(NSString *)str atIndex:(NSUInteger)index selected:(BOOL)selected
 {
-    if ([dropDown.dropDownView isKindOfClass:[UIButton class]])
-    {
-        UIButton *btn = (UIButton *)dropDown.dropDownView;
-        NSString *allSelectedItems = [dropDown.selectedItems componentsJoinedByString:@";"];
-        [btn setTitle:allSelectedItems forState:UIControlStateNormal];
-        
-    }
-
+    UIButton *btn = (UIButton *)dropDown.dropDownView;
+    NSString *allSelectedItems = [dropDown.selectedItems componentsJoinedByString:@";"];
+    [btn setTitle:allSelectedItems forState:UIControlStateNormal];
+    
 }
 
 - (UIColor *)outlineColorForDropdown:(VSDropdown *)dropdown
 {
-    if ([dropdown.dropDownView isKindOfClass:[UIButton class]])
-    {
-        UIButton *btn = (UIButton *)dropdown.dropDownView;
-        
-        return btn.titleLabel.textColor;
-
-    }
-    return [UIColor whiteColor];
+    UIButton *btn = (UIButton *)dropdown.dropDownView;
+    
+    return btn.titleLabel.textColor;
+    
 }
 
 - (CGFloat)outlineWidthForDropdown:(VSDropdown *)dropdown

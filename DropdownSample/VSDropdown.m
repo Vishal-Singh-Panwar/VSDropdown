@@ -317,8 +317,13 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     
 }
 
+- (instancetype)init
+{
+    return [self initWithDelegate:nil];
+    
+}
 
--(id)initWithDelegate:(id<VSDropdownDelegate>)delegate
+-(instancetype)initWithDelegate:(id<VSDropdownDelegate>)delegate
 {
     self = [super init];
     if (self)
@@ -334,6 +339,7 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     
     
 }
+
 
 
 -(void)setUpViews
@@ -707,18 +713,10 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     
     BOOL inside = [super pointInside:point withEvent:event];
 
-    if (self.controlRemovalManually == NO)
+    if (inside == NO && self.controlRemovalManually == NO)
     {
-        
-        if (inside == NO)
-        {
-            CGPoint pointInDropdownView = [self convertPoint:point toView:self.dropDownView];
-            if ([self.dropDownView pointInside:pointInDropdownView withEvent:event] == NO)
-            {
-                [self remove];
-            }
-            
-        }
+        [self remove];
+
     }
     
     return inside;
