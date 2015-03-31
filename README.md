@@ -16,6 +16,13 @@ Usage
 [_dropdown reloadDropdownWithContents:@[@"Hello World",@"Dropdown test",@"Bla Bla bla.."] andSelectedItems:@[_myButton.titleLabel.text]];
 
 ```
+If you have an Array containing custom modal classes, for eg. `countries` array containing `Country` objects. You want to show value of `name` property of all `Country` objects in dropdown list , you can use below method. `name` should be of `NSString` type.
+
+```objective-c
+
+[_dropdown reloadDropdownWithContents:self.countries keyPath:@"name" selectedItems:@[_myButton.titleLabel.text]];
+
+```
 ##Other
 `adoptParentTheme` property can be used when the button has solid background color. When this is YES, the dropdown draws itslef with a gradient color which matches with the button's background color. 
 
