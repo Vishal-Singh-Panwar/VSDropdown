@@ -12,6 +12,11 @@
 {
     VSDropdown *_dropdown;
 }
+@property (weak, nonatomic) IBOutlet UIButton *firstButton;
+@property (weak, nonatomic) IBOutlet UIButton *secondButton;
+@property (weak, nonatomic) IBOutlet UIButton *thirdButton;
+@property (weak, nonatomic) IBOutlet UIButton *fourthButton;
+
 - (IBAction)testAction:(id)sender;
 
 @end
@@ -21,6 +26,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self updateButtonLayers];
     _dropdown = [[VSDropdown alloc]initWithDelegate:self];
     [_dropdown setAdoptParentTheme:YES];
     [_dropdown setShouldSortItems:YES];
@@ -29,6 +35,24 @@
     // Do any additional setup after loading the view, typically from a nib.
 }
 
+-(void)updateButtonLayers
+{
+    [self.firstButton.layer setCornerRadius:3.0];
+    [self.firstButton.layer setBorderWidth:1.0];
+    [self.firstButton.layer setBorderColor:[self.firstButton.titleLabel.textColor CGColor]];
+    
+    [self.secondButton.layer setCornerRadius:3.0];
+    [self.secondButton.layer setBorderWidth:1.0];
+    [self.secondButton.layer setBorderColor:[self.secondButton.titleLabel.textColor CGColor]];
+    
+    [self.thirdButton.layer setCornerRadius:3.0];
+    [self.thirdButton.layer setBorderWidth:1.0];
+    [self.thirdButton.layer setBorderColor:[self.thirdButton.titleLabel.textColor CGColor]];
+    
+    [self.fourthButton.layer setCornerRadius:3.0];
+    [self.fourthButton.layer setBorderWidth:1.0];
+    [self.fourthButton.layer setBorderColor:[self.fourthButton.titleLabel.textColor CGColor]];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -51,7 +75,6 @@
     [_dropdown setSeparatorColor:sender.titleLabel.textColor];
     
     [_dropdown reloadDropdownWithContents:contents andSelectedItems:[sender.titleLabel.text componentsSeparatedByString:@";"]];
-    
     
 }
 
@@ -80,7 +103,12 @@
 
 - (CGFloat)cornerRadiusForDropdown:(VSDropdown *)dropdown
 {
-    return 5.0;
+    return 3.0;
+}
+
+- (CGFloat)offsetForDropdown:(VSDropdown *)dropdown
+{
+    return -2.0;
 }
 
 

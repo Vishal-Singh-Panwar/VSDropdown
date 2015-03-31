@@ -88,6 +88,16 @@ typedef NS_ENUM(NSUInteger, DropdownAnimation)
  */
 -(CGFloat)outlineWidthForDropdown:(VSDropdown *)dropdown;
 
+
+/** Asks  dropdown delegate for the dropdown offset.
+ 
+ @param dropDown reference to VSDropdown object.
+ @return Return offset of dropdown.
+ 
+ */
+-(CGFloat)offsetForDropdown:(VSDropdown *)dropdown;
+
+
 /** called on dropdown delegate whenever an item is selected from dropdown.
  
  @param dropDown reference to VSDropdown object.
@@ -295,7 +305,7 @@ typedef NS_ENUM(NSUInteger, DropdownAnimation)
  @param contents Array containing the Model objects whose keyPath values will be displayed in dropDown
  @param keyPath A key path of the form relationship.property (with one or more relationships)
  @param selectedItems Items which should be selected after reload.
-
+ 
  */
 -(void)reloadDropdownWithContents:(NSArray *)contents keyPath:(NSString *)keyPath selectedItems:(NSArray *)selectedItems;
 

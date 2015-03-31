@@ -12,6 +12,7 @@
 static NSString *dropDownCellIdentifier = @"dropDownCellIdentifier";
 static const CGFloat kDefaultHeight = 160.0;
 static const CGFloat kTableOffset = 5.0;
+static const CGFloat kDropdownOffset = 0.0;
 
 static const NSTimeInterval kDefaultDuration = 0.25;
 
@@ -21,6 +22,7 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     BOOL topEdgeRounded;
     CGRect viewFrame;
     CGFloat colorComponentsVar[8];
+    CGFloat dropdownHeight;
     
 }
 @property(nonatomic,strong)UITableView *tableView;
@@ -78,7 +80,7 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     const CGColorRef clearColor = [[UIColor clearColor] CGColor];
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetFillColorWithColor(context, clearColor);
-
+    
     CGContextFillRect(context, rect);
     
     CGRect insetRect = CGRectInset(rect, outlineStrokeWidth/2.0f, outlineStrokeWidth/2.0f);
@@ -94,7 +96,7 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     [self addGradientToPath:path];
     
     //CGContextClip(context);
-
+    
     CGPathRelease(path);
     
     
@@ -104,12 +106,12 @@ static const NSTimeInterval kDefaultDuration = 0.25;
 
 -(CGFloat)cornerRadius
 {
-
+    
     if (self.delegate && [self.delegate respondsToSelector:@selector(cornerRadiusForDropdown:)])
     {
         return [self.delegate cornerRadiusForDropdown:self];
     }
-
+    
     return 0.0;
     
 }
@@ -122,7 +124,7 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     }
     
     return 0.0;
-
+    
 }
 
 -(UIColor *)outlineColor
@@ -138,36 +140,36 @@ static const NSTimeInterval kDefaultDuration = 0.25;
 
 -(CGPathRef)newPathWithBottomEdgeRounded:(CGRect)rect withRadius:(CGFloat)radius
 {
-	CGMutablePathRef retPath = CGPathCreateMutable();
+    CGMutablePathRef retPath = CGPathCreateMutable();
     
-	CGRect innerRect = CGRectInset(rect, radius, radius);
+    CGRect innerRect = CGRectInset(rect, radius, radius);
     
     if (innerRect.origin.x == INFINITY || innerRect.origin.y == INFINITY)
     {
         innerRect = CGRectZero;
     }
-	CGFloat inside_right = innerRect.origin.x + innerRect.size.width;
-	CGFloat outside_right = rect.origin.x + rect.size.width;
-	CGFloat inside_bottom =  innerRect.origin.y + innerRect.size.height;
-	CGFloat outside_bottom =  rect.origin.y + rect.size.height;
+    CGFloat inside_right = innerRect.origin.x + innerRect.size.width;
+    CGFloat outside_right = rect.origin.x + rect.size.width;
+    CGFloat inside_bottom =  innerRect.origin.y + innerRect.size.height;
+    CGFloat outside_bottom =  rect.origin.y + rect.size.height;
     
-	CGFloat inside_top = innerRect.origin.y;
-	CGFloat outside_top = rect.origin.y;
-	CGFloat outside_left = rect.origin.x;
+    CGFloat inside_top = innerRect.origin.y;
+    CGFloat outside_top = rect.origin.y;
+    CGFloat outside_left = rect.origin.x;
     
-	CGPathMoveToPoint(retPath, NULL, innerRect.origin.x, outside_top);
+    CGPathMoveToPoint(retPath, NULL, innerRect.origin.x, outside_top);
     
-	CGPathAddLineToPoint(retPath, NULL, inside_right, outside_top);
-	CGPathAddArcToPoint(retPath, NULL, outside_right, outside_top, outside_right, inside_top, 0);
-	CGPathAddLineToPoint(retPath, NULL, outside_right, inside_bottom);
-	CGPathAddArcToPoint(retPath, NULL,  outside_right, outside_bottom, inside_right, outside_bottom, radius);
+    CGPathAddLineToPoint(retPath, NULL, inside_right, outside_top);
+    CGPathAddArcToPoint(retPath, NULL, outside_right, outside_top, outside_right, inside_top, 0);
+    CGPathAddLineToPoint(retPath, NULL, outside_right, inside_bottom);
+    CGPathAddArcToPoint(retPath, NULL,  outside_right, outside_bottom, inside_right, outside_bottom, radius);
     
-	CGPathAddLineToPoint(retPath, NULL, innerRect.origin.x, outside_bottom);
-	CGPathAddArcToPoint(retPath, NULL,  outside_left, outside_bottom, outside_left, inside_bottom, radius);
-	CGPathAddLineToPoint(retPath, NULL, outside_left, inside_top);
-	CGPathAddArcToPoint(retPath, NULL,  outside_left, outside_top, innerRect.origin.x, outside_top, 0);
+    CGPathAddLineToPoint(retPath, NULL, innerRect.origin.x, outside_bottom);
+    CGPathAddArcToPoint(retPath, NULL,  outside_left, outside_bottom, outside_left, inside_bottom, radius);
+    CGPathAddLineToPoint(retPath, NULL, outside_left, inside_top);
+    CGPathAddArcToPoint(retPath, NULL,  outside_left, outside_top, innerRect.origin.x, outside_top, 0);
     
-	CGPathCloseSubpath(retPath);
+    CGPathCloseSubpath(retPath);
     
     return retPath;
 }
@@ -177,34 +179,34 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     
     CGMutablePathRef retPath = CGPathCreateMutable();
     
-	CGRect innerRect = CGRectInset(rect, radius, radius);
+    CGRect innerRect = CGRectInset(rect, radius, radius);
     
     if (innerRect.origin.x == INFINITY || innerRect.origin.y == INFINITY)
     {
         innerRect = CGRectZero;
     }
-	CGFloat inside_right = innerRect.origin.x + innerRect.size.width;
-	CGFloat outside_right = rect.origin.x + rect.size.width;
-	CGFloat inside_bottom =  innerRect.origin.y + innerRect.size.height;
-	CGFloat outside_bottom =  rect.origin.y + rect.size.height;
+    CGFloat inside_right = innerRect.origin.x + innerRect.size.width;
+    CGFloat outside_right = rect.origin.x + rect.size.width;
+    CGFloat inside_bottom =  innerRect.origin.y + innerRect.size.height;
+    CGFloat outside_bottom =  rect.origin.y + rect.size.height;
     
-	CGFloat inside_top = innerRect.origin.y;
-	CGFloat outside_top = rect.origin.y;
-	CGFloat outside_left = rect.origin.x;
+    CGFloat inside_top = innerRect.origin.y;
+    CGFloat outside_top = rect.origin.y;
+    CGFloat outside_left = rect.origin.x;
     
-	CGPathMoveToPoint(retPath, NULL, innerRect.origin.x, outside_top);
+    CGPathMoveToPoint(retPath, NULL, innerRect.origin.x, outside_top);
     
-	CGPathAddLineToPoint(retPath, NULL, inside_right, outside_top);
-	CGPathAddArcToPoint(retPath, NULL, outside_right, outside_top, outside_right, inside_top, radius);
-	CGPathAddLineToPoint(retPath, NULL, outside_right, inside_bottom);
-	CGPathAddArcToPoint(retPath, NULL,  outside_right, outside_bottom, inside_right, outside_bottom, 0);
+    CGPathAddLineToPoint(retPath, NULL, inside_right, outside_top);
+    CGPathAddArcToPoint(retPath, NULL, outside_right, outside_top, outside_right, inside_top, radius);
+    CGPathAddLineToPoint(retPath, NULL, outside_right, inside_bottom);
+    CGPathAddArcToPoint(retPath, NULL,  outside_right, outside_bottom, inside_right, outside_bottom, 0);
     
-	CGPathAddLineToPoint(retPath, NULL, innerRect.origin.x, outside_bottom);
-	CGPathAddArcToPoint(retPath, NULL,  outside_left, outside_bottom, outside_left, inside_bottom, 0);
-	CGPathAddLineToPoint(retPath, NULL, outside_left, inside_top);
-	CGPathAddArcToPoint(retPath, NULL,  outside_left, outside_top, innerRect.origin.x, outside_top, radius);
+    CGPathAddLineToPoint(retPath, NULL, innerRect.origin.x, outside_bottom);
+    CGPathAddArcToPoint(retPath, NULL,  outside_left, outside_bottom, outside_left, inside_bottom, 0);
+    CGPathAddLineToPoint(retPath, NULL, outside_left, inside_top);
+    CGPathAddArcToPoint(retPath, NULL,  outside_left, outside_top, innerRect.origin.x, outside_top, radius);
     
-	CGPathCloseSubpath(retPath);
+    CGPathCloseSubpath(retPath);
     
     return retPath;
     
@@ -224,7 +226,7 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     CGFloat components[8];
     
     
-   
+    
     if (self.assignedDirection == VSDropdownDirection_Up)
     {
         components[0] = colorComponentsVar[4];
@@ -241,7 +243,7 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     {
         int numItems = sizeof(colorComponentsVar)/sizeof(CGFloat);
         memcpy(components, colorComponentsVar, sizeof(colorComponentsVar[0]) * numItems);
-
+        
     }
     gradient = CGGradientCreateWithColorComponents (colorspace, components, locations, num_locations);
     CGContextAddPath(ctx, path);
@@ -361,7 +363,6 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     [self.tableView setDataSource:self];
     [self.tableView setSeparatorColor:self.separatorColor];
     [self.tableView setSeparatorStyle:self.separatorType];
-    [self.tableView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:@"Contentsize"];
     [self addSubview:self.tableView];
     
 }
@@ -381,21 +382,9 @@ static const NSTimeInterval kDefaultDuration = 0.25;
 
 -(void)didPerformSetup
 {
-
-
+    
+    
 }
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-
-    CGFloat tableViewContentHeight = self.tableView.contentSize.height;
-    if (tableViewContentHeight > 0)
-    {
-        [self assignDropdownDirectionAndFrame];
-
-    }
-
-}
-
 
 -(void)setDataArr:(NSArray *)dataArr
 {
@@ -466,9 +455,9 @@ static const NSTimeInterval kDefaultDuration = 0.25;
         //[self getColorComponentFromColor:[UIColor colorWithRed:131.0/255.0 green:134.0/255.0 blue:134.0/255.0 alpha:1.0] scale:0.2];
         
     }
-
+    
     [self performSetup];
-   
+    
     if ([self vs_prepareForAnimation])
     {
         [self vs_performAnimation];
@@ -477,11 +466,11 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     else
     {
         [self vs_finishPresentingDropdown];
-    
+        
     }
     
     [self setNeedsDisplay];
-
+    
 }
 
 
@@ -505,8 +494,8 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     }
     UIView *superView = [self getParentViewForView:self.dropDownView];;
     [superView addSubview:self];
-    [self assignDropdownDirectionAndFrame];
-
+    //[self assignDropdownDirectionAndFrame];
+    
 }
 
 
@@ -520,7 +509,7 @@ static const NSTimeInterval kDefaultDuration = 0.25;
             
             [self setAlpha:0];
             break;
-
+            
         case DropdownAnimation_Scale:
             
             [self setTransform:CGAffineTransformScale(CGAffineTransformIdentity, 1, 0.1)];
@@ -552,7 +541,7 @@ static const NSTimeInterval kDefaultDuration = 0.25;
         }
         
     }];
-
+    
 }
 
 -(void)vs_finishPresentingDropdown
@@ -580,14 +569,14 @@ static const NSTimeInterval kDefaultDuration = 0.25;
             
         }
     }
-
+    
 }
 
 
 -(NSTimeInterval)animationDuration
 {
     return kDefaultDuration;
-
+    
 }
 
 -(UIView *)getParentViewForView:(UIView *)childView
@@ -600,35 +589,42 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     return parent;
     
 }
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    [self assignDropdownDirectionAndFrame];
+}
+
 -(void)assignDropdownDirectionAndFrame
 {
     CGFloat height = self.maxDropdownHeight == 0 ? kDefaultHeight:self.maxDropdownHeight;
+    
     
     if (self.tableView.contentSize.height<height + kTableOffset)
     {
         height = self.tableView.contentSize.height + kTableOffset;
     }
-
-    CGRect frame = CGRectZero;
+    
+    
+    dropdownHeight = height;
+    
     if (self.direction == VSDropdownDirection_Down)
     {
         [self setAssignedDirection:VSDropdownDirection_Down];
-        frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y+viewFrame.size.height-1.0, viewFrame.size.width, height);
-        topEdgeRounded = NO;
+        
     }
     else if (self.direction == VSDropdownDirection_Up)
     {
         [self setAssignedDirection:VSDropdownDirection_Up];
-        
-        frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y-self.frame.size.height+1.0, viewFrame.size.width, height);
-        topEdgeRounded = YES;
         
     }
     else
     {
         CGRect referenceFrame = [self.superview convertRect:viewFrame fromView:[self.dropDownView superview]];
         
-        CGFloat totalHeight = referenceFrame.origin.y+referenceFrame.size.height+self.bounds.size.height;
+        CGFloat totalHeight = referenceFrame.origin.y+referenceFrame.size.height+height;
         
         UIInterfaceOrientation appOrientation = [UIApplication sharedApplication].statusBarOrientation;
         
@@ -644,19 +640,48 @@ static const NSTimeInterval kDefaultDuration = 0.25;
         
         if (totalHeight < screenHeight)
         {
-            frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y+viewFrame.size.height-1.0, viewFrame.size.width, height);
             [self setDirection:VSDropdownDirection_Automatic];
             [self setAssignedDirection:VSDropdownDirection_Down];
-            topEdgeRounded = NO;
             
         }
         else
         {
-            frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y-self.frame.size.height+1.0, viewFrame.size.width, height);
             [self setDirection:VSDropdownDirection_Automatic];
             [self setAssignedDirection:VSDropdownDirection_Up];
-            topEdgeRounded = YES;
         }
+        
+    }
+    
+    [self updateFrame];
+    
+    if (self.bounds.size.height > [self outlineWidth])
+    {
+        [self.tableView setFrame:CGRectInset(self.bounds, [self outlineWidth], [self outlineWidth])];
+        
+    }
+    
+}
+
+-(void)updateFrame
+{
+    CGRect frame = CGRectZero;
+    
+    CGFloat dropdownOffset = kDropdownOffset;
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(offsetForDropdown:)])
+    {
+        dropdownOffset = [self.delegate offsetForDropdown:self];
+    }
+    
+    if (self.assignedDirection == VSDropdownDirection_Down)
+    {
+        frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y+viewFrame.size.height+dropdownOffset, viewFrame.size.width, dropdownHeight);
+        topEdgeRounded = NO;
+    }
+    else
+    {
+        frame = CGRectMake(viewFrame.origin.x, viewFrame.origin.y-dropdownHeight-dropdownOffset, viewFrame.size.width, dropdownHeight);
+        topEdgeRounded = YES;
         
     }
     
@@ -664,24 +689,18 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     
     [self setFrame:frame];
     
-    if (self.bounds.size.height > [self outlineWidth])
-    {
-        [self.tableView setFrame:CGRectInset(self.bounds, [self outlineWidth], [self outlineWidth])];
-        
-    }
-
     if (self.delegate && [self.delegate respondsToSelector:@selector(dropdown:didSetFrame:)])
     {
         [self.delegate dropdown:self didSetFrame:frame];
     }
-    
 }
+
+
 - (void)setAssignedDirection:(VSDropdown_Direction)assignedDirection
 {
     _assignedDirection = assignedDirection;
-    
     [self vs_configureAnchorPoint];
-
+    
 }
 
 -(void)vs_configureAnchorPoint
@@ -702,25 +721,25 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     }
     else
     {
-    
+        
         [self.layer setAnchorPoint:CGPointMake(0.5, 0.5)];
     }
-
+    
 }
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
 {
     
     BOOL inside = [super pointInside:point withEvent:event];
-
+    
     if (inside == NO && self.controlRemovalManually == NO)
     {
         [self remove];
-
+        
     }
     
     return inside;
-
+    
 }
 
 #pragma mark -
@@ -792,13 +811,13 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     {
         [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
         [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-
+        
     }
     else
     {
         [cell setAccessoryType:UITableViewCellAccessoryNone];
         [cell setSelected:NO];
-
+        
     }
     
     if ([self.disabledArray containsObject:stringAtIndexPath])
@@ -819,17 +838,17 @@ static const NSTimeInterval kDefaultDuration = 0.25;
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     VSDropdownItem *ddi = [self.sortedArr objectAtIndex:indexPath.row];
-       
+    
     NSMutableArray *allSelectedItems = [NSMutableArray arrayWithArray:self.selectedItems];
     
     if ([allSelectedItems containsObject:ddi.itemValue] == NO)
     {
         [allSelectedItems addObject:ddi.itemValue];
-
+        
     }
     
     [self setSelectedItems:[NSArray arrayWithArray:allSelectedItems]];
-
+    
     [tableView reloadData];
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(dropdown:didChangeSelectionForValue:atIndex:selected:)])
@@ -933,7 +952,7 @@ static const NSTimeInterval kDefaultDuration = 0.25;
 
 -(void)reloadDropdownWithContents:(NSArray *)contents imageNames:(NSArray *)imageNames selectedItems:(NSArray *)selectedItems
 {
-
+    
     if (self.dropDownView)
     {
         [self setDataArr:[self dropdownItmesWithContents:contents images:imageNames]];
@@ -942,13 +961,15 @@ static const NSTimeInterval kDefaultDuration = 0.25;
         
         [self.tableView reloadData];
         
+        [self setNeedsLayout];
+        
         [self setNeedsDisplay];
     }
     else
     {
         NSLog(@"It seems like the drodown has not been setup for any view yet. Please setup dropdown for view before reloading dropdown contents.");
     }
-
+    
 }
 
 
@@ -986,7 +1007,7 @@ static const NSTimeInterval kDefaultDuration = 0.25;
         }
         
         [self removeFromSuperview];
-
+        
     }
     
 }
@@ -997,9 +1018,9 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     {
         [self.delegate dropdownWillDisappear:self];
     }
+    
     [super removeFromSuperview];
     
-   
 }
 
 
@@ -1007,7 +1028,6 @@ static const NSTimeInterval kDefaultDuration = 0.25;
 {
     [_tableView setDelegate:nil];
     [_tableView setDataSource:nil];
-    [_tableView removeObserver:self forKeyPath:@"contentSize"];
     
 }
 

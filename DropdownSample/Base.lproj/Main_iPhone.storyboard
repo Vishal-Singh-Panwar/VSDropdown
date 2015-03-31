@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="vDD-B7-dVm">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="vDD-B7-dVm">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -88,6 +88,12 @@
                         </subviews>
                         <color key="backgroundColor" red="0.29542342776540542" green="0.38301130170062453" blue="0.44337910349999998" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
+                    <connections>
+                        <outlet property="firstButton" destination="kW4-AZ-2iM" id="PzR-Ht-j3e"/>
+                        <outlet property="fourthButton" destination="ShC-5u-t7y" id="Xzb-fW-yyr"/>
+                        <outlet property="secondButton" destination="DBi-Fz-h9w" id="nYs-If-dNa"/>
+                        <outlet property="thirdButton" destination="bT3-ii-JjF" id="DcR-de-WYq"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="s9L-wY-EMg" sceneMemberID="firstResponder"/>
             </objects>
