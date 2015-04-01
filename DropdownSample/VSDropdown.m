@@ -664,7 +664,10 @@ static const NSTimeInterval kDefaultDuration = 0.25;
 
 -(void)updateFrame
 {
+    BOOL  topRounded = topEdgeRounded;
     CGRect frame = CGRectZero;
+    
+    viewFrame = self.dropDownView.frame;
     
     CGFloat dropdownOffset = kDropdownOffset;
     
@@ -692,6 +695,11 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     if (self.delegate && [self.delegate respondsToSelector:@selector(dropdown:didSetFrame:)])
     {
         [self.delegate dropdown:self didSetFrame:frame];
+    }
+    
+    if (topEdgeRounded != topRounded)
+    {
+        [self setNeedsDisplay];
     }
 }
 
