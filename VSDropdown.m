@@ -664,7 +664,10 @@ static const NSTimeInterval kDefaultDuration = 0.25;
 
 -(void)updateFrame
 {
+    BOOL  topRounded = topEdgeRounded;
     CGRect frame = CGRectZero;
+    
+    viewFrame = self.dropDownView.frame;
     
     CGFloat dropdownOffset = kDropdownOffset;
     
@@ -692,6 +695,11 @@ static const NSTimeInterval kDefaultDuration = 0.25;
     if (self.delegate && [self.delegate respondsToSelector:@selector(dropdown:didSetFrame:)])
     {
         [self.delegate dropdown:self didSetFrame:frame];
+    }
+    
+    if (topEdgeRounded != topRounded)
+    {
+        [self setNeedsDisplay];
     }
 }
 
@@ -839,17 +847,25 @@ static const NSTimeInterval kDefaultDuration = 0.25;
 {
     VSDropdownItem *ddi = [self.sortedArr objectAtIndex:indexPath.row];
     
-    NSMutableArray *allSelectedItems = [NSMutableArray arrayWithArray:self.selectedItems];
-    
-    if ([allSelectedItems containsObject:ddi.itemValue] == NO)
+    if (self.allowMultipleSelection)
     {
-        [allSelectedItems addObject:ddi.itemValue];
+        NSMutableArray *allSelectedItems = [NSMutableArray arrayWithArray:self.selectedItems];
         
+        if ([allSelectedItems containsObject:ddi.itemValue] == NO)
+        {
+            [allSelectedItems addObject:ddi.itemValue];
+            
+        }
+        
+        [self setSelectedItems:[NSArray arrayWithArray:allSelectedItems]];
+        
+        [tableView reloadData];
+    }
+    else
+    {
+        [self setSelectedItems:@[ddi.itemValue]];
     }
     
-    [self setSelectedItems:[NSArray arrayWithArray:allSelectedItems]];
-    
-    [tableView reloadData];
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(dropdown:didChangeSelectionForValue:atIndex:selected:)])
     {

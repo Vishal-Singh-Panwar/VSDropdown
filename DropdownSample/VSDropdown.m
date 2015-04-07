@@ -847,17 +847,25 @@ static const NSTimeInterval kDefaultDuration = 0.25;
 {
     VSDropdownItem *ddi = [self.sortedArr objectAtIndex:indexPath.row];
     
-    NSMutableArray *allSelectedItems = [NSMutableArray arrayWithArray:self.selectedItems];
-    
-    if ([allSelectedItems containsObject:ddi.itemValue] == NO)
+    if (self.allowMultipleSelection)
     {
-        [allSelectedItems addObject:ddi.itemValue];
+        NSMutableArray *allSelectedItems = [NSMutableArray arrayWithArray:self.selectedItems];
         
+        if ([allSelectedItems containsObject:ddi.itemValue] == NO)
+        {
+            [allSelectedItems addObject:ddi.itemValue];
+            
+        }
+        
+        [self setSelectedItems:[NSArray arrayWithArray:allSelectedItems]];
+        
+        [tableView reloadData];
+    }
+    else
+    {
+        [self setSelectedItems:@[ddi.itemValue]];
     }
     
-    [self setSelectedItems:[NSArray arrayWithArray:allSelectedItems]];
-    
-    [tableView reloadData];
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(dropdown:didChangeSelectionForValue:atIndex:selected:)])
     {

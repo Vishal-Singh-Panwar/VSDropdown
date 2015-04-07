@@ -30,7 +30,6 @@
     _dropdown = [[VSDropdown alloc]initWithDelegate:self];
     [_dropdown setAdoptParentTheme:YES];
     [_dropdown setShouldSortItems:YES];
-    [_dropdown setAllowMultipleSelection:YES];
     
     // Do any additional setup after loading the view, typically from a nib.
 }
@@ -61,20 +60,31 @@
 
 - (IBAction)testAction:(id)sender
 {
-    [self showDropDownForButton:sender adContents:@[@"Two wrongs don't make a right.",@"No man is an island.",@"Aplhabetic sorting",@"Fortune favors the bold.",@"If it ain't broke, don't fix it.",@"If you can't beat 'em, join 'em.",@"One man's trash is another man's treasure.",@"You can lead a horse to water, but you can't make him drink.",@"Proverbs"]];
+    [self showDropDownForButton:sender adContents:@[@"Two wrongs don't make a right.",@"No man is an island.",@"Aplhabetic sorting",@"Fortune favors the bold.",@"If it ain't broke, don't fix it.",@"If you can't beat 'em, join 'em.",@"One man's trash is another man's treasure.",@"You can lead a horse to water, but you can't make him drink.",@"Proverbs"] multipleSelection:NO];
     
 }
 
--(void)showDropDownForButton:(UIButton *)sender adContents:(NSArray *)contents
+-(void)showDropDownForButton:(UIButton *)sender adContents:(NSArray *)contents multipleSelection:(BOOL)multipleSelection
 {
     
     [_dropdown setDrodownAnimation:rand()%2];
-    
+   
+    [_dropdown setAllowMultipleSelection:multipleSelection];
+
     [_dropdown setupDropdownForView:sender];
     
     [_dropdown setSeparatorColor:sender.titleLabel.textColor];
     
-    [_dropdown reloadDropdownWithContents:contents andSelectedItems:[sender.titleLabel.text componentsSeparatedByString:@";"]];
+    if (_dropdown.allowMultipleSelection)
+    {
+        [_dropdown reloadDropdownWithContents:contents andSelectedItems:[sender.titleLabel.text componentsSeparatedByString:@";"]];
+
+    }
+    else
+    {
+        [_dropdown reloadDropdownWithContents:contents andSelectedItems:@[sender.titleLabel.text]];
+
+    }
     
 }
 
