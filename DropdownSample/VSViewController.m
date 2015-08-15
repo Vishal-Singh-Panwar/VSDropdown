@@ -60,7 +60,7 @@
 
 - (IBAction)testAction:(id)sender
 {
-    [self showDropDownForButton:sender adContents:@[@"Two wrongs don't make a right.",@"No man is an island.",@"Aplhabetic sorting",@"Fortune favors the bold.",@"If it ain't broke, don't fix it.",@"If you can't beat 'em, join 'em.",@"One man's trash is another man's treasure.",@"You can lead a horse to water, but you can't make him drink.",@"Proverbs"] multipleSelection:NO];
+    [self showDropDownForButton:sender adContents:@[@"Two wrongs don't make a right.",@"No man is an island.",@"Aplhabetic sorting",@"Fortune favors the bold.",@"If it ain't broke, don't fix it.",@"If you can't beat 'em, join 'em.",@"One man's trash is another man's treasure.",@"You can lead a horse to water, but you can't make him drink."] multipleSelection:YES];
     
 }
 
@@ -77,12 +77,12 @@
     
     if (_dropdown.allowMultipleSelection)
     {
-        [_dropdown reloadDropdownWithContents:contents andSelectedItems:[sender.titleLabel.text componentsSeparatedByString:@";"]];
+        [_dropdown reloadDropdownWithContents:contents andSelectedItems:[[sender titleForState:UIControlStateNormal] componentsSeparatedByString:@";"]];
 
     }
     else
     {
-        [_dropdown reloadDropdownWithContents:contents andSelectedItems:@[sender.titleLabel.text]];
+        [_dropdown reloadDropdownWithContents:contents andSelectedItems:@[[sender titleForState:UIControlStateNormal]]];
 
     }
     
@@ -93,7 +93,18 @@
 - (void)dropdown:(VSDropdown *)dropDown didChangeSelectionForValue:(NSString *)str atIndex:(NSUInteger)index selected:(BOOL)selected
 {
     UIButton *btn = (UIButton *)dropDown.dropDownView;
-    NSString *allSelectedItems = [dropDown.selectedItems componentsJoinedByString:@";"];
+    
+    NSString *allSelectedItems = nil;
+    if (dropDown.selectedItems.count > 1)
+    {
+        allSelectedItems = [dropDown.selectedItems componentsJoinedByString:@";"];
+
+    }
+    else
+    {
+        allSelectedItems = [dropDown.selectedItems firstObject];
+
+    }
     [btn setTitle:allSelectedItems forState:UIControlStateNormal];
     
 }
